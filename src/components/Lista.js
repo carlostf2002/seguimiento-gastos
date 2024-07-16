@@ -1,21 +1,19 @@
 import React, { useState } from 'react';
-import { FaTrash } from 'react-icons/fa';
+import { FaTrash, FaEdit } from 'react-icons/fa';
 
-function Lista({ gastos, eliminarGasto }) {
+function Lista({ gastos, eliminarGasto, editarGasto }) {
   const [busqueda, setBusqueda] = useState('');
 
   const resultados = gastos.filter((gasto) =>
     gasto.descripcion.toLowerCase().includes(busqueda.toLowerCase()) ||
     gasto.categoria.toLowerCase().includes(busqueda.toLowerCase())
   );
-
   const handleEliminar = (id) => {
-    const confirmacion = window.confirm('¿Estás seguro de que deseas eliminar este gasto?');
-    if (confirmacion) {
+    const confirmar = window.confirm('¿Estás seguro de que quieres eliminar este gasto?');
+    if (confirmar) {
       eliminarGasto(id);
     }
   };
-
   return (
     <div>
       <h2>Lista de Gastos</h2>
@@ -35,6 +33,9 @@ function Lista({ gastos, eliminarGasto }) {
                 <h6 className="card-subtitle mb-2 text-muted">{gasto.categoria}</h6>
                 <p className="card-text">Monto: ${gasto.monto.toFixed(2)}</p>
                 <p className="card-text">Fecha: {gasto.fecha}</p>
+                <button className="btn btn-primary me-2" onClick={() => editarGasto(gasto)}>
+                  <FaEdit /> Editar
+                </button>
                 <button className="btn btn-danger" onClick={() => handleEliminar(gasto.id)}>
                   <FaTrash /> Eliminar
                 </button>

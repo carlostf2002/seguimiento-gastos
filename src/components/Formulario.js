@@ -1,11 +1,20 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 
-function Formulario({ agregarGasto }) {
+function Formulario({ agregarGasto, gastoEditado }) {
   const [descripcion, setDescripcion] = useState('');
   const [categoria, setCategoria] = useState('');
   const [monto, setMonto] = useState('');
   const [fecha, setFecha] = useState('');
   const [error, setError] = useState('');
+
+  useEffect(() => {
+    if (gastoEditado) {
+      setDescripcion(gastoEditado.descripcion);
+      setCategoria(gastoEditado.categoria);
+      setMonto(gastoEditado.monto);
+      setFecha(gastoEditado.fecha);
+    }
+  }, [gastoEditado]);
 
   const handleSubmit = (e) => {
     e.preventDefault();
@@ -15,7 +24,7 @@ function Formulario({ agregarGasto }) {
     }
     setError('');
     const nuevoGasto = {
-      id: Date.now(),
+      id: gastoEditado ? gastoEditado.id : Date.now(),
       descripcion,
       categoria,
       monto: parseFloat(monto),
@@ -68,7 +77,9 @@ function Formulario({ agregarGasto }) {
         />
       </div>
       <div className="d-grid gap-2">
-        <button type="submit" className="btn btn-primary">Agregar Gasto</button>
+        <button type="submit" className="btn btn-primary">
+          {gastoEditado ? 'Guardar Cambios' : 'Agregar Gasto'}
+        </button>
       </div>
     </form>
   );

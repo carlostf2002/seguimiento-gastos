@@ -6,10 +6,11 @@ import Footer from './components/Footer';
 
 function App() {
   const [gastos, setGastos] = useState([]);
-  
+  const [gastoEditado, setGastoEditado] = useState(null);
+
   useEffect(() => {
     document.title = "Mi Gestor de Gastos";
-  }, []);
+  }, [])
 
   useEffect(() => {
     const datosGuardados = localStorage.getItem('gastos');
@@ -23,19 +24,28 @@ function App() {
   }, [gastos]);
 
   const agregarGasto = (gasto) => {
-    setGastos([...gastos, gasto]);
+    if (gastoEditado) {
+      setGastos(gastos.map((g) => (g.id === gasto.id ? gasto : g)));
+      setGastoEditado(null);
+    } else {
+      setGastos([...gastos, gasto]);
+    }
   };
 
   const eliminarGasto = (id) => {
     setGastos(gastos.filter((gasto) => gasto.id !== id));
   };
 
+  const editarGasto = (gasto) => {
+    setGastoEditado(gasto);
+  };
+
   return (
     <div>
       <Header />
       <div className="container my-4">
-        <Formulario agregarGasto={agregarGasto} />
-        <Lista gastos={gastos} eliminarGasto={eliminarGasto} />
+        <Formulario agregarGasto={agregarGasto} gastoEditado={gastoEditado} />
+        <Lista gastos={gastos} eliminarGasto={eliminarGasto} editarGasto={editarGasto} />
       </div>
       <Footer />
     </div>
